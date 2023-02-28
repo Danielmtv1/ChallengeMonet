@@ -24,8 +24,10 @@ class StudentManager(BaseUserManager):
             email=self.normalize_email(email),
             password=password,
         )
+        user.is_staff = True
         user.is_superuser = True
         user.save(using=self._db)
+
         return user
 
 
@@ -41,12 +43,12 @@ class Student(AbstractBaseUser, PermissionsMixin):
     objects = StudentManager()
 
     def __str__(self):
-        return self.email
+        return f"{self.first_name} { self.last_name}"
 
     def get_full_name(self):
         if self.first_name and self.last_name:
             return f"{self.first_name} {self.last_name}"
-        return self.email
+        return (self.email,)
 
     def get_short_name(self):
         if self.first_name:
