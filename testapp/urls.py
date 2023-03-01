@@ -2,21 +2,17 @@ from django.urls import include, path
 from rest_framework import routers
 from . import views
 from .views import (
-    StudentViewSet,
     ActiveTestList,
-    QuestionsViewSet,
     AnswerStudentViewSet,
-    QuizViewSet,
-    StudentLoginView,
     ProtectedView,
     StudentSignupView,
+    StudentLoginView,
 )
 
 
 router = routers.DefaultRouter()
 
 router.register(r"tests", ActiveTestList)
-router.register(r"Questions", QuestionsViewSet)
 router.register(r"studentanswers", AnswerStudentViewSet)
 
 urlpatterns = [

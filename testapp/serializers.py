@@ -3,7 +3,7 @@ from django.core.mail import utils
 from django.core.validators import validate_email
 from rest_framework import serializers
 
-from .models import Question, Quiz, Student, StudentAnswer, Test
+from .models import Student, StudentAnswer, Test
 
 
 def validate_email_format(email):
@@ -55,15 +55,6 @@ class TestSerializer(serializers.ModelSerializer):
         )
 
 
-class QuestionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Question
-        fields = (
-            "id",
-            "text",
-        )
-
-
 class StudentAnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = StudentAnswer
@@ -71,18 +62,4 @@ class StudentAnswerSerializer(serializers.ModelSerializer):
             "student",
             "test",
             "answer",
-        )
-
-
-class QuizSerializer(serializers.ModelSerializer):
-    questions = QuestionSerializer(many=True, read_only=True)
-    answers = StudentAnswerSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = Quiz
-        fields = (
-            "student",
-            "test",
-            "questions",
-            "answers",
         )
