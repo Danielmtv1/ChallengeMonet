@@ -1,6 +1,4 @@
-from django.db import models
 from django.contrib.auth.models import (
-    User,
     AbstractBaseUser,
     BaseUserManager,
     PermissionsMixin,
@@ -8,56 +6,26 @@ from django.contrib.auth.models import (
 from django.db import models
 
 
-class StudentManager(BaseUserManager):
-    def create_user(self, email, password=None):
-        if not email:
-            raise ValueError("email is required")
-        user = self.model(
-            email=self.normalize_email(email),
-        )
-        user.set_password(password)
-        user.save(using=self._db)
-        return user
-
-    def create_superuser(self, email, password):
-        user = self.create_user(
-            email=self.normalize_email(email),
-            password=password,
-        )
-        user.is_staff = True
-        user.is_superuser = True
-        user.save(using=self._db)
-
-        return user
-
-
-class Student(AbstractBaseUser, PermissionsMixin):
+class Student(models.Model):
     email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=30, blank=True)
+    password = models.CharField(max_length=30, blank=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
 
-    USERNAME_FIELD = "email"
-
-    objects = StudentManager()
-
     def __str__(self):
-        return f"{self.first_name} { self.last_name}"
+        return self.full_name or self.email.split("@")[0]
 
-    def get_full_name(self):
+    @property
+    def full_name(self):
         if self.first_name and self.last_name:
             return f"{self.first_name} {self.last_name}"
-        return (self.email,)
+        return None
 
-    def get_short_name(self):
-        if self.first_name:
-            return self.first_name
-        return self.email
-
-    class Meta:
-        verbose_name = "student"
-        verbose_name_plural = "students"
+    @property
+    def short_name(self):
+        return self.first_name or self.email
 
 
 class Question(models.Model):
@@ -73,7 +41,7 @@ class Test(models.Model):
     date = models.DateField()
     time = models.TimeField(auto_now=True)
     questions = models.ManyToManyField(Question)
-    active = models.BooleanField("realizado", default=False)
+    active = models.BooleanField(default=True)
 
     def __str__(self):
         return f"{self.name} - {self.date}"
@@ -81,26 +49,22 @@ class Test(models.Model):
 
 class Answer(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    option_Answer = models.CharField(max_length=100)
-    answer_correct = models.BooleanField("Correct answer", default=False)
+    option_answer = models.CharField(max_length=100)
+    is_correct = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.option_Answer
+        return self.option_answer
 
 
 class StudentAnswer(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     test = models.ForeignKey(Test, on_delete=models.CASCADE)
-    answer = models.ManyToManyField(Answer)
+    answers = models.ManyToManyField(Answer)
     is_submitted = models.BooleanField(default=False)
 
     def get_score(self):
         total_questions = self.test.questions.count()
-        total_correct = 0
-
-        for answer in self.answer.all():
-            if answer.answer_correct:
-                total_correct += 1
+        total_correct = self.answers.filter(is_correct=True).count()
         score = (total_correct / total_questions) * 100
         return score
 
@@ -116,3 +80,21 @@ class Nota(models.Model):
 
     def __str__(self):
         return f"{self.student} - {self.test} - {self.score}"
+
+
+class Quiz(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    test = models.ForeignKey(Test, on_delete=models.CASCADE)
+    questions = models.ManyToManyField(Question)
+    answers = models.ManyToManyField(Answer)
+
+    def get_score(self):
+        total_questions = self.questions.count()
+        total_correct = self.questions.filter(
+            answer__is_correct=True, answer__in=self.answers.all()
+        ).count()
+        score = (total_correct / total_questions) * 100
+        return score
+
+    def __str__(self):
+        return f"{self.student} - {self.test}"
