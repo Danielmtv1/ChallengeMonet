@@ -61,3 +61,33 @@ Requerimientos de Aplicación Django
 3. Endpoint protegido para registrar las respuestas de un estudiante
 4. Modificaciones al Django Admin para que un estudiante pueda ingresar al portal y solo
 ver sus propias respuestas a los tests
+
+## Directory structure
+~~~
+edutest/
+├── edutest/
+│   ├── __init__.py
+│   ├── asgi.py
+│   ├── settings.py
+│   ├── urls.py
+│   └── wsgi.py
+├── testapp/
+│   ├── migrations/
+│   │   └── __init__.py
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── forms.py
+│   ├── models.py
+│   ├── serializers.py
+│   ├── tests.py
+│   ├── urls.py
+│   └── views.py
+├── .gitignore
+├── manage.py
+└── README.md
+~~~
+Want to contribute? Great!
+
+## Directory structure
+![Diagram Entity Relation ](/static/DER_Edutest.png )
