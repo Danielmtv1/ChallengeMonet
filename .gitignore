@@ -6,6 +6,7 @@ migrations/
 # C extensions
 *.so
 *.pyc
+*.log
 # Distribution / packaging
 .Python
 build/
