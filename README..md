@@ -20,7 +20,7 @@ Python-django-REST.
 
 ## Tech
 
-Dillinger uses a number of open source projects to work properly:
+Edutest uses a number of open source projects to work properly:
 
 - [Python] - "there should be one—and preferably only one—obvious way to do it"
 
@@ -45,7 +45,7 @@ python manage.py runserver
 
 ## Plugins
 
-Dillinger is currently extended with the following plugins.
+Edutest is currently extended with the following plugins.
 Instructions on how to use them in your own application are linked below.
 
 | Plugin | README |
