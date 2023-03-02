@@ -2,6 +2,7 @@
 ## _Technical Challenge Monet_
 
 [![N|Solid](https://cdn.iconscout.com/icon/free/png-256/django-12-1175186.png?f=avif&w=128)](https://docs.djangoproject.com/en/4.1/)
+
 Prueba tecnica Monet
 Python-django-REST.
 - Exam management
@@ -20,7 +21,7 @@ Python-django-REST.
 
 ## Tech
 
-Edutest uses a number of open source projects to work properly:
+Edutest use a open source project to work properly:
 
 - [Python] - "there should be one—and preferably only one—obvious way to do it"
 
@@ -61,6 +62,34 @@ Requerimientos de Aplicación Django
 3. Endpoint protegido para registrar las respuestas de un estudiante
 4. Modificaciones al Django Admin para que un estudiante pueda ingresar al portal y solo
 ver sus propias respuestas a los tests
+
+## Directory structure
+~~~
+edutest/
+├── edutest/
+│   ├── __init__.py
+│   ├── asgi.py
+│   ├── settings.py
+│   ├── urls.py
+│   └── wsgi.py
+├── testapp/
+│   ├── migrations/
+│   │   └── __init__.py
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── forms.py
+│   ├── models.py
+│   ├── serializers.py
+│   ├── tests.py
+│   ├── urls.py
+│   └── views.py
+├── .gitignore
+├── manage.py
+└── README.md
+~~~
 ## Diagram Entity Relation
 
 ![Diagram Entity Relation](/static/DER_Edutest.png)
+
+
