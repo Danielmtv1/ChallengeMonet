@@ -61,3 +61,6 @@ Requerimientos de Aplicación Django
 3. Endpoint protegido para registrar las respuestas de un estudiante
 4. Modificaciones al Django Admin para que un estudiante pueda ingresar al portal y solo
 ver sus propias respuestas a los tests
+## Diagram Entity Relation
+
+![Diagram Entity Relation](/static/DER_Edutest.png)
