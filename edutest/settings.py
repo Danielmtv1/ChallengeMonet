@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 import datetime
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -40,7 +41,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "testapp",
     "rest_framework",
-    "rest_framework_jwt",
+    "rest_framework_simplejwt",
+    "rest_framework.authtoken",
 ]
 
 MIDDLEWARE = [
@@ -58,7 +60,7 @@ ROOT_URLCONF = "edutest.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -136,11 +138,42 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 ##
 # Configuración de JWT
-JWT_AUTH = {
-    "JWT_RESPONSE_PAYLOAD_HANDLER": "yourappname.views.jwt_response_payload_handler",
-    "JWT_EXPIRATION_DELTA": datetime.timedelta(days=1),
-    "JWT_ALLOW_REFRESH": True,
-    "JWT_REFRESH_EXPIRATION_DELTA": datetime.timedelta(days=7),
-}
 
+REST_FRAMEWORK = {
+    "DEFAULT_RENDERER_CLASSES": [
+        "rest_framework.renderers.JSONRenderer",
+        "rest_framework.renderers.BrowsableAPIRenderer",
+    ]
+}
 AUTH_USER_MODEL = "testapp.Student"
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+        "file": {
+            "class": "logging.FileHandler",
+            "filename": "django.log",
+        },
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["console", "file"],
+            "level": "INFO",
+        },
+        "testapp": {
+            "handlers": ["console", "file"],
+            "level": "DEBUG",
+        },
+    },
+}
+# JWT_PAYLOAD_HANDLER=
+# JWT_ENCODE_HANDLER=
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    )
+}

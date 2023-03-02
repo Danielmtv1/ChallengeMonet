@@ -104,7 +104,7 @@ class Test(models.Model):
 
 
 class StudentAnswer(models.Model):
-    # student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    student = models.ForeignKey("Student", on_delete=models.CASCADE)
     test = models.ForeignKey(Test, on_delete=models.CASCADE)
     answers = models.CharField(max_length=30, blank=True)
     is_submitted = models.BooleanField(default=False)
@@ -113,11 +113,11 @@ class StudentAnswer(models.Model):
         return f"{self.test.name} - {self.test.date} - {self.test.time}"
 
 
-class Nota(models.Model):
+"""class Nota(models.Model):
     # student = models.ForeignKey(Student, on_delete=models.CASCADE)
     test = models.ForeignKey(Test, on_delete=models.CASCADE)
     score = models.CharField(max_length=10)
     date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f" - {self.test} - {self.score}"  # {self.student}"
+        return f" - {self.test} - {self.score}"  # {self.student}"""

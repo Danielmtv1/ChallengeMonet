@@ -1,7 +1,5 @@
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin
-from django.contrib.auth.forms import UserCreationForm
-from .models import Student, Test, StudentAnswer
+from .models import Student, Test, StudentAnswer, Question
 from django import forms
 
 

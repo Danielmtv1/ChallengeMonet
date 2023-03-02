@@ -1,25 +1,16 @@
 from rest_framework import status, viewsets, serializers
-
-from rest_framework.authtoken.models import Token
-from rest_framework.authtoken.views import ObtainAuthToken
-from rest_framework.decorators import api_view, schema
 from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.schemas import AutoSchema
 from rest_framework.views import APIView
-from rest_framework_jwt.settings import api_settings
 from django.contrib.auth import password_validation
 from django.contrib.auth.hashers import make_password
-from .models import Student, Test, StudentAnswer
+from .models import Test, StudentAnswer
 from .serializers import (
     StudentSerializer,
     StudentAnswerSerializer,
     TestSerializer,
 )
-
-jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
-jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 
 
 class StudentSignupView(CreateAPIView):
@@ -58,18 +49,6 @@ class StudentSignupView(CreateAPIView):
         )
 
 
-class StudentLoginView(ObtainAuthToken):
-    def post(self, request, *args, **kwargs):
-        serializer = self.serializer_class(
-            data=request.data,
-            context={"request": request},
-        )
-        serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data["user"]
-        token, created = Token.objects.get_or_create(user=user)
-        return Response({"token": token.key})
-
-
 class ProtectedView(APIView):
     permission_classes = (IsAuthenticated,)
 
@@ -77,38 +56,26 @@ class ProtectedView(APIView):
         return Response({"message": "Bienvenido, estudiante!"})
 
 
-class CustomAutoSchema(AutoSchema):
-    def get_link(self, path, method, base_url):
-        pass
-
-
-class StudentViewSet(viewsets.ModelViewSet):
-    queryset = Student.objects.all()
-    serializer_class = StudentSerializer
-
-
 class ActiveTestList(viewsets.ModelViewSet):
     serializer_class = TestSerializer
     queryset = Test.objects.all()
+
+    def retrieve(self, request, pk=None):
+        try:
+            test = self.get_queryset().get(pk=pk)
+            serializer = TestSerializer(test)
+            return Response(serializer.data)
+        except Test.DoesNotExist:
+            return Response(
+                {"error": "La prueba no existe."}, status=status.HTTP_404_NOT_FOUND
+            )
+        except Exception as e:
+            return Response(
+                {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 
 class AnswerStudentViewSet(viewsets.ModelViewSet):
     serializer_class = StudentAnswerSerializer
     queryset = StudentAnswer.objects.all()
-
-
-@api_view(["POST", "GET"])
-@schema(CustomAutoSchema())
-def viewst(request, *args, **kwargs):
-    if request.method == "GET":
-        active_test = Test.objects.filter(active=True).first()
-        if active_test:
-            questions = active_test.questions.all()
-            question_data = []
-            for question in questions:
-                answers = question.answer_set.all()
-                answer_data = []
-                for answer in answers:
-                    answer_data.append(answer.option_Answer)
-                question_data.append({"text": question.text, "answers": answer_data})
-            return Response({"test_name": active_test.name})
+    permission_classes = [IsAuthenticated]
