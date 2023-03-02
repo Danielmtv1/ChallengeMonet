@@ -111,13 +111,3 @@ class StudentAnswer(models.Model):
 
     def __str__(self):
         return f"{self.test.name} - {self.test.date} - {self.test.time}"
-
-
-"""class Nota(models.Model):
-    # student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    test = models.ForeignKey(Test, on_delete=models.CASCADE)
-    score = models.CharField(max_length=10)
-    date = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f" - {self.test} - {self.score}"  # {self.student}"""
