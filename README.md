@@ -131,13 +131,13 @@ http://localhost:8000/admin/
     >Body (json)
 
     ~~~
-    {"email": "email@mail.com", "password": "contraseña"}
+    {"email": "email@mail.com", "password": "password"}
     ~~~
     >cURL
     
         curl --location 'http://localhost:8000/api/token/' \
         --header 'Content-Type: application/json' \
-        --data-raw '{"email": "correo@gmail.com", "password": "contraseña"}'
+        --data-raw '{"email": "mail@mail.com", "password": "password"}'
         
     
     
@@ -157,7 +157,7 @@ http://localhost:8000/admin/
             curl --location 'http://localhost:8000/student/answers/' \
             --header 'Authorization: Bearer {{token}}' \
             --header 'Content-Type: application/json' \
-            --data '{"test_id":1,"question": 1, "answers": "respuesta alumno logeado"}'
+            --data '{"test_id":1,"question": 1, "answers": "ANSWER FOR STUDENTLOG"}'
             
             
 
