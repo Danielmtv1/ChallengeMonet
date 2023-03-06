@@ -143,11 +143,10 @@ http://localhost:8000/admin/
 ##### Student Answer
 * POST  http://localhost:8000/student/answers/
     >body(json)
-
-        | Request Heders | 
-        | ------ | ------ |
-        | Authorization | Bearer {{token}} |
-        | Content-Type | application/json |
+| Request Heders | 
+| ------ | ------ |
+| Authorization | Bearer {{token}} |
+| Content-Type | application/json |
         
     ~~~
         {"test_id":1, "question": 1, "answers": "answer"}
