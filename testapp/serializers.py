@@ -41,18 +41,22 @@ class StudentSerializer(serializers.ModelSerializer):
 
 
 class StudentAnswerSerializer(serializers.ModelSerializer):
+    test_id = serializers.IntegerField(write_only=True)
+
     class Meta:
         model = StudentAnswer
-        fields = ["id", "question", "answers"]
+        fields = ["id", "test_id", "question", "answers"]
 
     def create(self, validated_data):
         user = self.context["request"].user
-        print("#" * 50)
-        print(user)
-
         student = user if user.is_staff else None
-
-        return StudentAnswer.objects.create(student=student, **validated_data)
+        test_id = validated_data.pop("test_id", None)
+        answer = StudentAnswer.objects.create(student=student, **validated_data)
+        if test_id is not None:
+            test = Test.objects.get(id=test_id)
+            answer.test = test
+            answer.save()
+        return answer
 
 
 class QuestionSerializer(serializers.ModelSerializer):
