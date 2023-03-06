@@ -142,8 +142,10 @@ http://localhost:8000/admin/
     
 ##### Student Answer
 * POST  http://localhost:8000/student/answers/
+```sh
 **Authorization**  Bearer {{token}}
 **Content-Type**   application/json 
+```
     >body(json)
 
     ~~~
@@ -166,7 +168,7 @@ http://localhost:8000/admin/
 
 MIT
 
-**Free Software!**
+
 **JaimeCabrera.**
 [//]: # 
 
