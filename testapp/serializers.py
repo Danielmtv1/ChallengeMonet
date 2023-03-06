@@ -1,9 +1,8 @@
 from django.core.exceptions import ValidationError
-from django.core.mail import utils
 from django.core.validators import validate_email
 from rest_framework import serializers
 
-from .models import Student, StudentAnswer, Test
+from .models import Student, StudentAnswer, Test, Question
 
 
 def validate_email_format(email):
@@ -41,24 +40,32 @@ class StudentSerializer(serializers.ModelSerializer):
         return email
 
 
-class TestSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Test
-        fields = (
-            "id",
-            "name",
-            "description",
-            "date",
-            "time",
-            "questions",
-            "active",
-        )
-
-
 class StudentAnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = StudentAnswer
-        fields = (
-            "test",
-            "answers",
-        )
+        fields = ["id", "question", "answers"]
+
+    def create(self, validated_data):
+        user = self.context["request"].user
+        print("#" * 50)
+        print(user)
+
+        student = user if user.is_staff else None
+
+        return StudentAnswer.objects.create(student=student, **validated_data)
+
+
+class QuestionSerializer(serializers.ModelSerializer):
+    answers = StudentAnswerSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Question
+        fields = ("id", "text", "answers")
+
+
+class TestSerializer(serializers.ModelSerializer):
+    questions = QuestionSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Test
+        fields = ("id", "name", "description", "date", "time", "questions", "is_active")

@@ -1,5 +1,7 @@
+from rest_framework.permissions import IsAuthenticated
 from rest_framework import status, viewsets, serializers
 from rest_framework.generics import CreateAPIView
+from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -23,24 +25,21 @@ class StudentSignupView(CreateAPIView):
         validated_data = serializer.validated_data
         password = validated_data["password"]
 
-        # Validar la contraseña utilizando las reglas de validación de Django
         try:
             password_validation.validate_password(password)
         except password_validation.ValidationError as e:
             raise serializers.ValidationError({"password": list(e.messages)})
 
-        # Encriptar la contraseña utilizando make_password
         validated_data["password"] = make_password(
             password,
             "key",
         )
 
-        # Crear el estudiante y devolver los datos validados
         self.perform_create(serializer)
         data = serializer.data
-        data.pop("password")  # Eliminar el campo password
+        data.pop("password")
         message = {"message": "Estudiante creado exitosamente."}
-        data.update(message)  # Agregar el mensaje de confirmación
+        data.update(message)
 
         headers = self.get_success_headers(serializer.data)
         return Response(
@@ -49,33 +48,29 @@ class StudentSignupView(CreateAPIView):
         )
 
 
-class ProtectedView(APIView):
-    permission_classes = (IsAuthenticated,)
-
-    def get(self, request):
-        return Response({"message": "Bienvenido, estudiante!"})
-
-
 class ActiveTestList(viewsets.ModelViewSet):
-    serializer_class = TestSerializer
     queryset = Test.objects.all()
+    serializer_class = TestSerializer
 
-    def retrieve(self, request, pk=None):
-        try:
-            test = self.get_queryset().get(pk=pk)
-            serializer = TestSerializer(test)
-            return Response(serializer.data)
-        except Test.DoesNotExist:
-            return Response(
-                {"error": "La prueba no existe."}, status=status.HTTP_404_NOT_FOUND
-            )
-        except Exception as e:
-            return Response(
-                {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+    @action(detail=False, methods=["get"])
+    def list(self, request):
+        queryset = Test.objects.filter(is_active=True)
+        serializer = self.serializer_class(queryset, many=True)
+        return Response(serializer.data)
 
 
-class AnswerStudentViewSet(viewsets.ModelViewSet):
+class AnswerStudentViewSet(CreateAPIView):
     serializer_class = StudentAnswerSerializer
     queryset = StudentAnswer.objects.all()
     permission_classes = [IsAuthenticated]
+
+
+class TestTakingView(APIView):
+    queryset = Test.objects.all()
+    permission_classes = (IsAuthenticated,)
+    print(IsAuthenticated.has_permission)
+
+    def get(self, test_id):
+        tests = Test.objects.get(id=test_id)
+        serializer = TestSerializer(tests)
+        return Response(serializer.data)

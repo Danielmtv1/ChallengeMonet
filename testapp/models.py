@@ -48,7 +48,7 @@ class Student(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=30, blank=True)
-    password = models.CharField(max_length=30, blank=True)
+
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
@@ -75,20 +75,14 @@ class Student(AbstractBaseUser, PermissionsMixin):
         return self.first_name or self.email
 
     def has_perm(self, perm, obj=None):
+        if self.is_staff and not self.is_superuser:
+            if perm == "testapp.view_studentanswer":
+                return True
+        else:
+            return True
+
+    def has_module_perms(self, app_label):
         return True
-
-    def has_module_perm(self, app_Label):
-        return True
-
-    def __str__(self):
-        return f"{self.email}"
-
-
-class Question(models.Model):
-    text = models.TextField()
-
-    def __str__(self):
-        return self.text
 
 
 class Test(models.Model):
@@ -96,18 +90,26 @@ class Test(models.Model):
     description = models.TextField()
     date = models.DateField()
     time = models.TimeField(auto_now=True)
-    questions = models.ManyToManyField(Question)
-    active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return f"{self.name} - {self.date}"
 
 
-class StudentAnswer(models.Model):
-    student = models.ForeignKey("Student", on_delete=models.CASCADE)
-    test = models.ForeignKey(Test, on_delete=models.CASCADE)
-    answers = models.CharField(max_length=30, blank=True)
-    is_submitted = models.BooleanField(default=False)
+class Question(models.Model):
+    test = models.ForeignKey(Test, on_delete=models.CASCADE, related_name="questions")
+    text = models.TextField()
 
     def __str__(self):
-        return f"{self.test.name} - {self.test.date} - {self.test.time}"
+        return self.text
+
+
+class StudentAnswer(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    question = models.ForeignKey(
+        Question, on_delete=models.CASCADE, related_name="answers"
+    )
+    answers = models.CharField(max_length=30, blank=True)
+
+    def __str__(self):
+        return f"{self.student}"

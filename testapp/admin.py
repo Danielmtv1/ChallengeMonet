@@ -60,10 +60,22 @@ class StudentAdmin(admin.ModelAdmin):
     ordering = ("email",)
 
 
+class StudentAnswerAdmin(admin.ModelAdmin):
+    model = StudentAnswer
+    list_display = ("id", "student", "question", "answers")
+
+    def get_queryset(self, request):
+        user = request.user.id
+        if request.user.is_superuser:
+            return super().get_queryset(request)
+        else:
+            return super().get_queryset(request).filter(student=user)
+
+
 admin.site.register(Student)
 
 admin.site.register(Test)
 
 admin.site.register(Question)
 
-admin.site.register(StudentAnswer)
+admin.site.register(StudentAnswer, StudentAnswerAdmin)
