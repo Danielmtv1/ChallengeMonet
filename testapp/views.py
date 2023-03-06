@@ -1,13 +1,11 @@
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import password_validation
-from rest_framework import serializers, status, viewsets
+from rest_framework import serializers, status
 from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.views import APIView
-from rest_framework.decorators import action
-from .models import Test, StudentAnswer
-from .serializers import StudentSerializer, StudentAnswerSerializer, TestSerializer
+from .models import StudentAnswer
+from .serializers import StudentSerializer, StudentAnswerSerializer
 
 
 ######-Student Views

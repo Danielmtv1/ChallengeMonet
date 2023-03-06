@@ -13,7 +13,7 @@ urlpatterns = [
     path(
         "student/answers/",
         AnswerStudentViewSet.as_view(),
-        name="Student Answers",
+        name="Student_Answers",
     ),
     path("", include(router.urls)),
 ]

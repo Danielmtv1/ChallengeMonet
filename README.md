@@ -1,7 +1,7 @@
 # Edutest
 ## _Technical Challenge Monet_
 
-[![N|Solid](https://cdn.iconscout.com/icon/free/png-256/django-12-1175186.png?f=avif&w=128)](https://docs.djangoproject.com/en/4.1/)
+[![Django](https://cdn.iconscout.com/icon/free/png-256/django-12-1175186.png?f=avif&w=128){height=64px}](https://docs.djangoproject.com/en/4.1/)
 
 Prueba tecnica Monet
 Python-django-REST.
