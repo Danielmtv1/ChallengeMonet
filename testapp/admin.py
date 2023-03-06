@@ -1,22 +1,6 @@
 from django.contrib import admin
 from .models import Student, Test, StudentAnswer, Question
-from django import forms
-
-
-class StudentForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput())
-
-    class Meta:
-        model = Student
-        fields = (
-            "email",
-            "password",
-            "first_name",
-            "last_name",
-            "is_active",
-            "is_staff",
-            "is_superuser",
-        )
+from .forms import StudentForm
 
 
 class StudentAdmin(admin.ModelAdmin):
