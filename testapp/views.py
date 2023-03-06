@@ -1,21 +1,26 @@
-from rest_framework.permissions import IsAuthenticated
-from rest_framework import status, viewsets, serializers
+from django.contrib.auth.hashers import make_password
+from django.contrib.auth import password_validation
+from rest_framework import serializers, status, viewsets
 from rest_framework.generics import CreateAPIView
-from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from django.contrib.auth import password_validation
-from django.contrib.auth.hashers import make_password
+from rest_framework.decorators import action
 from .models import Test, StudentAnswer
-from .serializers import (
-    StudentSerializer,
-    StudentAnswerSerializer,
-    TestSerializer,
-)
+from .serializers import StudentSerializer, StudentAnswerSerializer, TestSerializer
 
 
+######-Student Views
 class StudentSignupView(CreateAPIView):
+    """A view for creating a new student account.
+
+    Attributes:
+        serializer_class: The serializer used to validate and deserialize the request data.
+
+    Methods:
+        create: Handles POST requests to create a new student account.
+    """
+
     serializer_class = StudentSerializer
 
     def create(self, request, *args, **kwargs):
@@ -49,12 +54,24 @@ class StudentSignupView(CreateAPIView):
 
 
 class AnswerStudentViewSet(CreateAPIView):
+    """A view for creating a student answer to a question.
+
+    Attributes:
+        serializer_class: The serializer used to validate and deserialize the request data.
+        queryset: The queryset used to retrieve the student answers.
+        permission_classes: The permission classes required to access the view.
+
+    Methods:
+        create: Handles POST requests to create a new student answer to a question.
+    """
+
     serializer_class = StudentAnswerSerializer
     queryset = StudentAnswer.objects.all()
     permission_classes = [IsAuthenticated]
 
 
-class ActiveTestList(viewsets.ModelViewSet):
+#### Test Views unavalible
+"""class ActiveTestList(viewsets.ModelViewSet):
     queryset = Test.objects.all()
     serializer_class = TestSerializer
 
@@ -62,15 +79,4 @@ class ActiveTestList(viewsets.ModelViewSet):
     def list(self, request):
         queryset = Test.objects.filter(is_active=True)
         serializer = self.serializer_class(queryset, many=True)
-        return Response(serializer.data)
-
-
-class TestTakingView(APIView):
-    queryset = Test.objects.all()
-    permission_classes = (IsAuthenticated,)
-    print(IsAuthenticated.has_permission)
-
-    def get(self, test_id):
-        tests = Test.objects.get(id=test_id)
-        serializer = TestSerializer(tests)
-        return Response(serializer.data)
+        return Response(serializer.data)"""
