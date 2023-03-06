@@ -2,10 +2,9 @@ from django.test import TestCase
 from rest_framework.test import APIClient, APITestCase
 from rest_framework import status
 from django.urls import reverse
-from rest_framework_simplejwt.views import TokenObtainPairView
 from .models import Student, StudentAnswer, Test, Question
 from .serializers import StudentAnswerSerializer
-from datetime import datetime, date
+from datetime import datetime
 
 
 class StudentSignupViewTestCase(TestCase):

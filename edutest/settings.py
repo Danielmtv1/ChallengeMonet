@@ -136,15 +136,19 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 ##
+AUTH_USER_MODEL = "testapp.Student"
 # Configuración de JWT
 
 REST_FRAMEWORK = {
     "DEFAULT_RENDERER_CLASSES": [
         "rest_framework.renderers.JSONRenderer",
         "rest_framework.renderers.BrowsableAPIRenderer",
-    ]
+    ],
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
 }
-AUTH_USER_MODEL = "testapp.Student"
+
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
@@ -170,9 +174,3 @@ LOGGING = {
 }
 # JWT_PAYLOAD_HANDLER=
 # JWT_ENCODE_HANDLER=
-
-REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
-    )
-}

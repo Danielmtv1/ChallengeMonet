@@ -1,7 +1,7 @@
 # Edutest
 ## _Technical Challenge Monet_
 
-[![Django](https://cdn.iconscout.com/icon/free/png-256/django-12-1175186.png?f=avif&w=128){height=64px}](https://docs.djangoproject.com/en/4.1/)
+[![Django](https://cdn.iconscout.com/icon/free/png-256/django-12-1175186.png?f=avif&w=128)](https://docs.djangoproject.com/en/4.1/)
 
 Prueba tecnica Monet
 Python-django-REST.
@@ -86,6 +86,9 @@ edutest/
 │   └── views.py
 ├── .gitignore
 ├── manage.py
+├── static
+│   ├── __init__.py
+│   └──  DER_Edutest.png
 └── README.md
 ~~~
 ## Diagram Entity Relation
@@ -93,3 +96,81 @@ edutest/
 ![Diagram Entity Relation](/static/DER_Edutest.png)
 
 
+
+## End Points
+##### admin
+```sh
+http://localhost:8000/admin/
+```
+
+##### Signup Student:
+
+* POST  http://localhost:8000/student/signup/
+    >Body (json)
+
+    ~~~
+    {
+        "email": "correo@gmail.com",
+        "first_name": "nombre",
+        "last_name": "apellido",
+        "password": "contraseña"
+    }
+    ~~~
+    >cURL
+    
+        curl --location 'http://localhost:8000/student/signup/' \
+        --data-raw '{
+        "email": "correo@gmail.com",
+        "first_name": "nombre",
+        "last_name": "apellido",
+        "password": "contraseña"
+        }'
+
+##### Api Token
+* POST  http://localhost:8000/api/token/
+    >Body (json)
+
+    ~~~
+    {"email": "email@mail.com", "password": "contraseña"}
+    ~~~
+    >cURL
+    
+        curl --location 'http://localhost:8000/api/token/' \
+        --header 'Content-Type: application/json' \
+        --data-raw '{"email": "correo@gmail.com", "password": "contraseña"}'
+        
+    
+##### Student Answer
+* POST  http://localhost:8000/student/answers/
+    >body(json)
+
+    | Request Heders |  | 
+        | ------ | ------ |
+        | Authorization | Bearer {{token}} |
+        | Content-Type | application/json |
+        
+    ~~~
+        {"test_id":1, "question": 1, "answers": "answer"}
+    ~~~  
+    >cURL
+          
+            curl --location 'http://localhost:8000/student/answers/' \
+            --header 'Authorization: Bearer {{token}}' \
+            --header 'Content-Type: application/json' \
+            --data '{"test_id":1,"question": 1, "answers": "respuesta alumno logeado"}'
+            
+            
+
+    ```sh
+    127.0.0.1:8000
+    ```
+
+## License
+
+MIT
+
+**Free Software!**
+**JaimeCabrera.**
+[//]: # 
+
+   [Python]: <https://docs.python.org/3/>
