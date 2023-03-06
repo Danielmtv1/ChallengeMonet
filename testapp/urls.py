@@ -7,7 +7,6 @@ from .views import (
     TestTakingView,
 )
 
-
 router = routers.DefaultRouter()
 
 

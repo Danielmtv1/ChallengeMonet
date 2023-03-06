@@ -48,6 +48,12 @@ class StudentSignupView(CreateAPIView):
         )
 
 
+class AnswerStudentViewSet(CreateAPIView):
+    serializer_class = StudentAnswerSerializer
+    queryset = StudentAnswer.objects.all()
+    permission_classes = [IsAuthenticated]
+
+
 class ActiveTestList(viewsets.ModelViewSet):
     queryset = Test.objects.all()
     serializer_class = TestSerializer
@@ -57,12 +63,6 @@ class ActiveTestList(viewsets.ModelViewSet):
         queryset = Test.objects.filter(is_active=True)
         serializer = self.serializer_class(queryset, many=True)
         return Response(serializer.data)
-
-
-class AnswerStudentViewSet(CreateAPIView):
-    serializer_class = StudentAnswerSerializer
-    queryset = StudentAnswer.objects.all()
-    permission_classes = [IsAuthenticated]
 
 
 class TestTakingView(APIView):
