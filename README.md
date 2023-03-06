@@ -140,12 +140,13 @@ http://localhost:8000/admin/
         --data-raw '{"email": "correo@gmail.com", "password": "contraseña"}'
         
     
+    
 ##### Student Answer
 * POST  http://localhost:8000/student/answers/
-```sh
-**Authorization**  Bearer {{token}}
-**Content-Type**   application/json 
-```
+    ```sh
+    **Authorization**  Bearer {{token}}
+    **Content-Type**   application/json 
+    ```
     >body(json)
 
     ~~~
@@ -167,9 +168,3 @@ http://localhost:8000/admin/
 ## License
 
 MIT
-
-
-**JaimeCabrera.**
-[//]: # 
-
-   [Python]: <https://docs.python.org/3/>
