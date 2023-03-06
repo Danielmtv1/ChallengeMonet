@@ -3,18 +3,30 @@ from rest_framework import routers
 from .views import (
     ActiveTestList,
     AnswerStudentViewSet,
-    ProtectedView,
     StudentSignupView,
+    TestTakingView,
 )
 
 
 router = routers.DefaultRouter()
 
-router.register(r"tests", ActiveTestList)
-router.register(r"studentanswers", AnswerStudentViewSet)
 
 urlpatterns = [
     path("student/signup/", StudentSignupView.as_view(), name="signup"),
-    path("protected/", ProtectedView.as_view(), name="protected"),
+    path(
+        "student/answers/",
+        AnswerStudentViewSet.as_view(),
+        name="Student Answers",
+    ),
+    path("tests/<int:test_id>/take/", TestTakingView.as_view(), name="Take Test"),
+    path(
+        "tests/",
+        ActiveTestList.as_view(
+            {
+                "get": "list",
+            }
+        ),
+        name="test-list",
+    ),
     path("", include(router.urls)),
 ]
